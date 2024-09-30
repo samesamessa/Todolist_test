@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="org.iclass.todolist.dao.TodoMapper">
+	 <!-- 전체 리스트 확인 -->
+	<select id="selectList" resultType="TodoDTO">
+		select * from tbl_todo_list where username=#{username} order by workno
+	</select>
+
+	<!-- 개별 리스트 확인 -->
+	<select id="selectOne" parameterType="int" resultType="TodoDTO">
+		select * from tbl_todo_list where workno = #{workno}
+	</select>
+
+	<!-- 반환값 -->
+	<select id="selectById" parameterType="int" resultType="TodoDTO">
+		SELECT * FROM tbl_todo_list WHERE workno = #{workno}
+	</select>
+
+
+
+	<!-- 리스트 추가 -->
+	<insert id="insert" parameterType="TodoDTO">
+		insert into tbl_todo_list(workno, workname, worktype, regdate, enddate, priority, finished, username)
+		values(seq_workno.nextval, #{workname}, #{worktype}, sysdate, sysdate+7, #{priority}, 'N', #{username})
+	</insert>
+
+	<!-- 리스트 수정 -->
+	<update id="update" parameterType="TodoDTO">
+		update tbl_todo_list
+		set workname = #{workname},
+			worktype = #{worktype},
+			priority = #{priority}
+		where workno = #{workno}
+	</update>
+	<!-- 리스트 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from tbl_todo_list where workno = #{workno}
+	</delete>
+
+	<!-- 현재 시퀀스 번호 가져오기 -->
+	<select id="curr_seq" resultType="int">
+		SELECT seq_workno.currval FROM dual
+	</select>
+
+	<!-- 현재 날짜 가져오기 -->
+	<select id="regDate" resultType="java.time.LocalDateTime">
+		select sysdate from dual
+	</select>
+
+	<!-- 마감일 가져오기 -->
+	<select id="endDate" resultType="java.time.LocalDateTime">
+		select sysdate+7 from dual
+	</select>
+ </mapper>
